@@ -39,7 +39,7 @@ class Crawler
      * @throws \GuzzleHttp\Exception\ConnectException If the proxy is unavailable or $countrySpecificSuffix is invalid
      * @return ResultList
      */
-    public function getResults(SearchTermInterface $searchTerm, string $googleDomain, string $countryCode): ResultList
+    public function getResults(SearchTermInterface $searchTerm, string $googleDomain = 'google.com', string $countryCode = ''): ResultList
     {
         if (stripos($googleDomain, 'google.') === false || stripos($googleDomain, 'http') === 0) {
             throw new \InvalidArgumentException('Invalid google domain');
