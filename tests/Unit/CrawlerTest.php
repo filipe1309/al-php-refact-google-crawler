@@ -1,4 +1,5 @@
 <?php
+
 namespace CViniciusSDias\GoogleCrawler\Tests\Unit;
 
 use CViniciusSDias\GoogleCrawler\Crawler;
@@ -13,17 +14,19 @@ use Psr\Http\Message\StreamInterface;
 
 class CrawlerTest extends TestCase
 {
-    public function testTryingToInstantiateACrawlerWithHttpOnGoogleDomainMustFail()
+    public function testTryingToGetResultsWithHttpOnGoogleDomainMustFail()
     {
         $this->expectException(\InvalidArgumentException::class);
         $domain = 'http://google.com';
-        new Crawler(new SearchTerm(''), new NoProxy(), $domain);
+        $crawler = new Crawler(new NoProxy());
+        $crawler->getResults(new SearchTerm(''), $domain);
     }
 
     public function testTryingToInstantiateACrawlerWithoutGoogleOnTheDomainMustFail()
     {
         $this->expectException(\InvalidArgumentException::class);
-        new Crawler(new SearchTerm(''), new NoProxy(), 'invalid-domain');
+        $crawler = new Crawler(new NoProxy());
+        $crawler->getResults(new SearchTerm(''), 'invalid-domain');
     }
 
     public function testTryingToParseInvalidHtmlMustThrowException()
@@ -45,7 +48,7 @@ class CrawlerTest extends TestCase
             ->method('__toString')
             ->willReturn('');
 
-        $crawler = new Crawler($searchTermMock, $proxyMock);
-        $crawler->getResults();
+        $crawler = new Crawler($proxyMock);
+        $crawler->getResults($searchTermMock);
     }
 }
