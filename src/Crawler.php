@@ -141,7 +141,6 @@ class Crawler
             throw new InvalidResultException('Result is a google suggestion');
         }
 
-        $googleResult = $this->createResult($resultLink, $descriptionElement);
-        return $googleResult;
+        return  $this->createResult($resultLink, $descriptionElement);
     }
 }
