@@ -21,3 +21,11 @@ vendor/bin/phpunit
 https://www.php.net/parse_url
 
 https://www.php.net/parse_str
+
+## Class 4
+
+```sh
+composer require yitznewton/maybe-php
+```
+
+https://wiki.c2.com/?DontUseExceptionsForFlowControl
