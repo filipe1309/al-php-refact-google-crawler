@@ -15,3 +15,9 @@ composer install
 
 vendor/bin/phpunit
 ```
+
+## Class 3
+
+https://www.php.net/parse_url
+
+https://www.php.net/parse_str
