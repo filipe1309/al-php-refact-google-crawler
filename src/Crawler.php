@@ -3,14 +3,13 @@
 namespace CViniciusSDias\GoogleCrawler;
 
 use CViniciusSDias\GoogleCrawler\Exception\InvalidGoogleHtmlException;
-use CViniciusSDias\GoogleCrawler\Exception\InvalidResultException;
 use CViniciusSDias\GoogleCrawler\Proxy\{
-    GoogleProxyInterface,
-    NoProxy
+    GoogleProxyAbstractFactoryInterface,
+    NoProxyAbstractFactory
 };
+use CViniciusSDias\GoogleCrawler\Proxy\HttpClient\GoogleHttpClientInterface;
+use CViniciusSDias\GoogleCrawler\Proxy\UrlParser\GoogleUrlParserInterface;
 use Symfony\Component\DomCrawler\Crawler as DomCrawler;
-use Symfony\Component\DomCrawler\Link;
-use DOMElement;
 
 /**
  * Google Crawler
@@ -20,13 +19,18 @@ use DOMElement;
  */
 class Crawler
 {
-    /** @var GoogleProxyInterface $proxy */
-    protected $proxy;
+    private GoogleHttpClientInterface $httpClient;
+    private GoogleUrlParserInterface $urlParser;
 
     public function __construct(
-        GoogleProxyInterface $proxy = null
+        GoogleProxyAbstractFactoryInterface $factory = null
     ) {
-        $this->proxy = $proxy ?? new NoProxy();
+        if ($factory === null) {
+            $factory = new NoProxyAbstractFactory();
+        }
+
+        $this->httpClient = $factory->createGoogleHttpClient();
+        $this->urlParser = $factory->createGoogleUrlParser();
     }
 
     /**
@@ -50,14 +54,14 @@ class Crawler
             $googleUrl .= "&gl={$countryCode}";
         }
 
-        $response = $this->proxy->getHttpResponse($googleUrl);
+        $response = $this->httpClient->getHttpResponse($googleUrl);
         $stringResponse = (string) $response->getBody();
         $domCrawler = new DomCrawler($stringResponse);
         $googleResultList = $this->createGoogleResultList($domCrawler);
 
         $resultList = new ResultList($googleResultList->count());
 
-        $domElementParser = new DomElementParser($this->proxy);
+        $domElementParser = new DomElementParser($this->urlParser);
         foreach ($googleResultList as $googleResultElement) {
             $parsedResultMaybe = $domElementParser->parse($googleResultElement);
             $parsedResultMaybe->select(fn (Result $parsedResult) => $resultList->addResult($parsedResult));

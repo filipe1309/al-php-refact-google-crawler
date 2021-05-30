@@ -24,8 +24,11 @@ https://www.php.net/parse_str
 
 ## Class 4
 
+https://linepogl.wordpress.com/2011/03/15/a-php-maybe-monad-2/
+
 ```sh
 composer require yitznewton/maybe-php
 ```
 
 https://wiki.c2.com/?DontUseExceptionsForFlowControl
+

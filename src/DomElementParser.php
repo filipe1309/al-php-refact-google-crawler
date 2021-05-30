@@ -7,11 +7,11 @@ use Yitznewton\Maybe\Maybe;
 use Symfony\Component\DomCrawler\Link;
 use Symfony\Component\DomCrawler\Crawler;
 use CViniciusSDias\GoogleCrawler\Exception\InvalidResultException;
-use CViniciusSDias\GoogleCrawler\Proxy\GoogleProxyInterface;
+use CViniciusSDias\GoogleCrawler\Proxy\UrlParser\GoogleUrlParserInterface;
 
 class DomElementParser
 {
-    public function __construct(private GoogleProxyInterface $proxy)
+    public function __construct(private GoogleUrlParserInterface $proxy)
     {
     }
 
