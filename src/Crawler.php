@@ -3,16 +3,13 @@
 namespace CViniciusSDias\GoogleCrawler;
 
 use CViniciusSDias\GoogleCrawler\Exception\InvalidGoogleHtmlException;
-use CViniciusSDias\GoogleCrawler\Exception\InvalidResultException;
 use CViniciusSDias\GoogleCrawler\Proxy\{
-    GoogleProxyInterface,
-    NoProxy
+    GoogleProxyAbstractFactoryInterface,
+    NoProxyAbstractFactory
 };
 use CViniciusSDias\GoogleCrawler\Proxy\HttpClient\GoogleHttpClientInterface;
 use CViniciusSDias\GoogleCrawler\Proxy\UrlParser\GoogleUrlParserInterface;
 use Symfony\Component\DomCrawler\Crawler as DomCrawler;
-use Symfony\Component\DomCrawler\Link;
-use DOMElement;
 
 /**
  * Google Crawler
@@ -22,11 +19,18 @@ use DOMElement;
  */
 class Crawler
 {
+    private GoogleHttpClientInterface $httpClient;
+    private GoogleUrlParserInterface $urlParser;
 
     public function __construct(
-        private GoogleHttpClientInterface $httpClient,
-        private GoogleUrlParserInterface $urlParser,
+        GoogleProxyAbstractFactoryInterface $factory = null
     ) {
+        if ($factory === null) {
+            $factory = new NoProxyAbstractFactory();
+        }
+
+        $this->httpClient = $factory->createGoogleHttpClient();
+        $this->urlParser = $factory->createGoogleUrlParser();
     }
 
     /**
